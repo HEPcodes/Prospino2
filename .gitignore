@@ -1,0 +1,7 @@
+*.o
+/prospino_2.run
+/xx_*.mod
+/prospino.dat
+/prospino.dat2
+/prospino.dat3
+
