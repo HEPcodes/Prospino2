@@ -1431,8 +1431,9 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       offdiag = matrix(1,2) + matrix(2,1)
 
       if ( abs( abs(det)-1.D0 ) > 1.d-8 ) then
-         print*, " COMPUTE_SCALAR_ANGLE: determinant wrong ",det
-         call HARD_STOP
+         print*, 
+     & " COMPUTE_SCALAR_ANGLE: determinant not one, but go on ",det
+ctp         call HARD_STOP
       end if
 
       if ( abs( offdiag ) < 1.d-8 ) then

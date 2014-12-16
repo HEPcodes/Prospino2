@@ -99,13 +99,15 @@ contains
        ns_min = 0
        ns_max = 0 
     end if
-
+    
     if (icoll == 0) then                                                                          ! set the collider energy Tevatron/LHC
        sc = 1960.0**2 
     else if (icoll == 1) then 
        sc = 14000.0**2 
     else if (icoll == 2) then 
        sc =  7000.0**2 
+    else if (icoll == 3) then 
+       sc =  8000.0**2 
     else 
        print*, " PROSPINO: icoll not set correctly?, continue LHC "
        sc = 14000.0**2 
@@ -132,6 +134,7 @@ contains
     do n1   = 0,0,200                                                                           ! can be used to shift MSSM masses
     do n0   = 0,0,150                                                                           ! in routine INIT_SUSY (Xinitialize.f90)
     do ns   = ns_min,ns_max,10                                                                  ! change both scales simultaneously
+
        run0 = n0
        run1 = n1
        scafac = 2.0**(ns/10.0)

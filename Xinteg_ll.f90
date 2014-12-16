@@ -15,10 +15,11 @@ contains
     real(kind=double)                  :: dsig 
     real(kind=double), dimension(1:30) :: massin
     real(kind=double), dimension(1:99) :: mkraemer
+    real(kind=double), dimension(2,2)  :: taumix
     real(kind=double), dimension(4)    :: Cs,Csx
     complex(kind=double), dimension(4) :: Cv
     integer            :: iq,inlo  
-    real(kind=double)  :: m1,m2,s2l,c2l,delta_soft,s,beta,mu
+    real(kind=double)  :: m1,m2,delta_soft,s,beta,mu
     real(kind=double)  :: x1m,x1p,x1,x1_jac
     real(kind=double)  :: x2m,x2p,x2,x2_jac
     real(kind=double)  :: t2m,t2p,t2,t2_jac
@@ -50,8 +51,7 @@ contains
 
     m1  = mass_s(1)                                            ! assign the final state masses 
     m2  = mass_s(2)
-    s2l = mass_s(3)
-    c2l = sqrt( 1.0 - s2l**2 )
+    taumix(1:2,1:2) = msl(1:2,1:2)
 
     if ( (abs(m1)+abs(m2))**2 > 0.98*sc ) then
 !tp       print*, " collider energy not large enough ",m1,m2,sqrt(sc)
@@ -216,8 +216,8 @@ contains
     dsig = 0.0 
     do iq =-1,1,2                                              ! the loop for up-type and down-type quarks 
 
-       call COUPLING_LL(s,m1,m2,iq,Cs,Cv,mx,s2l,c2l,mkraemer)
-       if ((ii.eq.4).or.(ii.eq.6)) call COUPLING_LL(sx,m1,m2,iq,Csx,Cv,mx,s2l,c2l,mkraemer)
+       call COUPLING_LL(s,m1,m2,iq,Cs,Cv,mx,taumix,mkraemer)
+       if ((ii.eq.4).or.(ii.eq.6)) call COUPLING_LL(sx,m1,m2,iq,Csx,Cv,mx,taumix,mkraemer)
 
        massin(8) = mx
        
@@ -295,7 +295,7 @@ contains
     if (type==0) then 
        c1 = c1_in 
     else if (type==1) then 
-       c1 = ( 2.D0*w3*e2 - s3 )/(2.D0*p*w3)
+       c1 = ( 2.0*w3*e2 - s3 )/(2.0*p*w3)
     else 
        print*, " KIN_LL: wrong input on type:",type
     end if
@@ -342,28 +342,22 @@ contains
 !                         C(4) located at ( k2(q_out), ipart2 )  for all Cl,Cr
 !  mx   = mw,mz s channel gauge boson mass 
 ! ------------------------------
-  subroutine COUPLING_LL(s,m1,m2,iq,Cs,Cv,mx,s2l,c2l,mkraemer)
+  subroutine COUPLING_LL(s,m1,m2,iq,Cs,Cv,mx,taumix,mkraemer)
     integer,                              intent(in)   :: iq
-    real(kind=double),                    intent(in)   :: s,m1,m2,s2l,c2l
+    real(kind=double),                    intent(in)   :: s,m1,m2
+    real(kind=double), dimension(2,2),    intent(in)   :: taumix
     real(kind=double),                    intent(out)  :: mx
     real(kind=double), dimension(4),      intent(out)  :: Cs
     real(kind=double), dimension(99),     intent(out)  :: mkraemer
     complex(kind=double), dimension(4),   intent(out)  :: Cv
 
     real(kind=double)    :: t3,qq,t3w,qqw,v1,v1w,v2,a2
-    real(kind=double)    :: sinl,cosl,sw,sw2,cw2,cw
+    real(kind=double)    :: sw,sw2,cw2,cw
     real(kind=double)    :: only_u,only_d,gamfac
     complex(kind=double) :: v2w,a2w
 
     t3(iq)  = dble(iq) /2.0                                                  ! quark quantum numbers 
     qq(iq)  = 2.0/3.0 + ( dble(iq) - 1.0 ) /2.0
-
-    if (s2l>=0.0) then                                                      ! changes sign with sign of theta
-       sinl = +sqrt( (1.0-c2l)/2.0 )       
-    else 
-       sinl = -sqrt( (1.0-c2l)/2.0 )       
-    end if
-    cosl = sqrt( (1.0+c2l)/2.0 )                                            ! always >0 for 2*theta=-pi...pi
 
     sw = sqrt( 1.0 - mw**2/mz**2 )
     sw2 = sw**2
@@ -405,14 +399,14 @@ contains
        case(2)
           v2w  = - ( 0.0         -      sw2 * qqw )/(2.0*sw*cw) 
           a2w  = - v2w
-       case(6)
-          v2w  = - ( t3w*cosl**2 -      sw2 * qqw )/(2.0*sw*cw) 
+       case(6)                                                               ! stau1-stau1*
+          v2w  = - ( t3w*taumix(1,1)**2 - sw2 * qqw )/(2.0*sw*cw) 
           a2w  = v2w
-       case(7)
-          v2w  = - ( t3w*sinl**2 -      sw2 * qqw )/(2.0*sw*cw) 
+       case(7)                                                               ! stau2-stau2*
+          v2w  = - ( t3w*taumix(2,1)**2 - sw2 * qqw )/(2.0*sw*cw) 
           a2w  = v2w
-       case(8)
-          v2w = - t3w*(-sinl*cosl)                 /(2.0*sw*cw)
+       case(8)                                                               ! stau1-stau2* plus stau2-stau1*
+          v2w = - t3w*taumix(1,1)*taumix(2,1) /(2.0*sw*cw)
           a2w  = v2w
        case(14)
           v2w  = -(cw2-sw2)/2.0                    /(2.0*sw*cw)
@@ -431,11 +425,11 @@ contains
        gamfac = 1.0
        select case(ipart1)
        case(4,5)
-          v2w  = - 1.D0 /(2.0*sqrt(2.0)*sw)
-       case(10,11)
-          v2w  = - cosl * 1.0 /(2.0*sqrt(2.0)*sw)
-       case(12,13)
-          v2w  = - sinl * 1.0 /(2.0*sqrt(2.0)*sw)
+          v2w  = - 1.0 /(2.0*sqrt(2.0)*sw)
+       case(10,11)                                                               ! sntau-stau1
+          v2w  = - taumix(1,1) * 1.0 /(2.0*sqrt(2.0)*sw)
+       case(12,13)                                                               ! sntau-stau2
+          v2w  = - taumix(2,1) * 1.0 /(2.0*sqrt(2.0)*sw)
        end select
        a2w = v2w
 
@@ -455,7 +449,7 @@ contains
     Cs(1:4) = 0.0 
     Cv(1:4) = 0.0
 
-    Cs(1) =  gamfac * (v1*v1w)**2 /2.0 + s * 2.D0 * real( v1*v1w*v2*v2w )/(s-mx**2)  &  ! wim's conventions 
+    Cs(1) =  gamfac * (v1*v1w)**2 /2.0 + s * 2.0 * real( v1*v1w*v2*v2w )/(s-mx**2)  &  ! wim's conventions 
            + s**2*( v2**2+a2**2 )*( abs(v2w)**2+abs(a2w)**2 ) /(s-mx**2)**2             ! [v1,v2,v1w,a2 real]
 
     mkraemer(11) =  mx
@@ -465,7 +459,7 @@ contains
     mkraemer(15) =  v1w
     mkraemer(16) =  real(v2w)
     mkraemer(17) = -real(a2w)
-    mkraemer(21:28) = 0.D0
+    mkraemer(21:28) = 0.0
 
     only_u = ( 1.0 + iq )/2.0                                                           ! quarks in the t/u channel 
     only_d = ( 1.0 - iq )/2.0

@@ -89,7 +89,7 @@ contains
     iscaling = 0  ! calculate cross sections[0] or scaling functions[1]     !
     eta = 1.e-3                                                             !
 !----------------------------------------------------------------------------
-    if (iscaling==1) icoll = 3   ! flag for the luminosities
+    if (iscaling==1) icoll = 4   ! flag for the luminosities
     
 !----------------------------------------------------------------------------
     imx = 0       ! negative masses[0] hard wired                           !
@@ -137,7 +137,7 @@ contains
        idub = 0
     end if
 
-    if (icoll>2) then                     ! may happen for scaling functions 
+    if (icoll>3) then                     ! may happen for scaling functions 
        sc = 1.0
     end if
     
@@ -201,7 +201,7 @@ contains
        lvalid_global = .false.
     end if
 
-    if ( (icoll<0).or.(icoll>2) ) then                                                     ! test icoll 
+    if ( (icoll<0).or.(icoll>3) ) then                                                     ! test icoll 
        print*, " TEST_SETTINGS_GLOBAL: icoll not in range 0...1 ",icoll 
        lvalid_global = .false.
     end if
@@ -619,7 +619,8 @@ contains
 
 !tp    mg = mg * 1.5**run0                  ! examples for the use of run0 and run1
 !tp    mg = mg + run1
-!tp    mst1 = run1
+!tp    msq(+6) = msq(+6) + run0
+!tp    msq(-6) = msq(-6) + run0
 !tp    print*, " mass shift ",mg
 
     if (imx==1) then                   ! neutralino masses, switch only works for Born term
