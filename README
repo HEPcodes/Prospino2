@@ -1,14 +1,14 @@
 (1) How to run the prospino f90 code: 
 
   download files from official Prospino2 website 
-  email to tilman.plehn@cern.ch if you want to know about updates/bug removal/new features and channels
+  email to plehn@uni-heidelberg.de if you want to know about updates/bug removal/new features and channels
   unpack prospino.tar.gz
 
   fix path in Makefile
   fix f90 compiler in Makefile (tested with Intel, DEC-Alpha, Portland Group, NAG, gfortran)
 
   type `make'
-  run executable `prospino.run > test.out'
+  run executable `prospino.run > screeen.out'
   to remove object files etc type `make clean' (does not affect the running code)
 
   enjoy the ride, for comments or complaints please email tilman.plehn@cern.ch
@@ -34,7 +34,12 @@
                 with format (parameters not needed for the respective channel set to zero):
 
                 final state, neutralino/chargino#1 and #2, dummy0, dummy1, ren/fac scale factor, mass1, mass2, sin(2 angle)
-                cross section LO, rel error LO, cross section NLO, rel error NLO, K factor 
+                cross section LO, rel error LO, cross section NLO, rel error NLO, K factor, corrected cross section LO, corrected cross section NLO
+
+                while the LO and NLO results are produced with some numerical assumptions (degenerate squark masses, reduced mass hierarchies),
+                the rate LO_ms do not include these assumptions and the NLO_ms rate is computed as the LO_ms rate with our best K factor. 
+
+                EXECUTIVE SUMMARY: UNLESS YOU HAVE A PARTICULAR REQUIREMENT PLEASE USE THE LO_ms and NLO_ms RATES AS THE PROSPINO2 OUTPUT
 
   prospino.dat2: long output file with all masses etc.
 

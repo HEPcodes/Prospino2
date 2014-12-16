@@ -4,6 +4,7 @@ program main
   implicit none
 
   integer                              :: inlo,isq_ng_in,icoll_in,i_error_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in
+  real(kind=double)                    :: energy_in
   integer                              :: ifs
   logical                              :: lfinal
   character(len=2)                     :: final_state_in
@@ -25,7 +26,8 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  icoll_in = 1      ! specify the collider : tevatron[0], lhc14[1], lhc7[2] !
+  icoll_in = 1      ! collider : tevatron[0], lhc[1]                        !
+  energy_in = 7000  ! collider energy in GeV                                !
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
@@ -51,7 +53,7 @@ program main
 !                                                                           !
 !  squark and antisquark added, but taking into account different sb or ss  !
 !----------------------------------------------------------------------------
-  final_state_in = 'le'
+  final_state_in = 'nn'
 
 !----------------------------------------------------------------------------
 !  final_state_in = ng,ns,nn                                                !
@@ -102,7 +104,7 @@ program main
   call PROSPINO_OPEN_CLOSE(0)                                                            ! open all input/output files
   
   do i_error_in=0,1,1                                                                    ! loop for test purposes only
-  do icoll_in=0,2,2                                                                      ! loop for test purposes only
+  do icoll_in=0,1,1                                                                      ! loop for test purposes only
   do ifs = 1,15,1                                                                        ! loop and if structure for test purposes only
   if (ifs==1) then          
      final_state_in = 'ng'     
@@ -142,7 +144,7 @@ program main
   call PROSPINO_CHECK_FS(final_state_in,ipart1_in,ipart2_in,lfinal)                      ! check final state 
   if (.not. lfinal ) cycle
      
-  call PROSPINO(inlo,isq_ng_in,icoll_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
+  call PROSPINO(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
         
   end do                                                                                 ! close both ipart loops 
   end do

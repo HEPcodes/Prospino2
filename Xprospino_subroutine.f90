@@ -19,11 +19,12 @@ module xx_prospino_subroutine
   public :: PROSPINO, PROSPINO_OPEN_CLOSE
 contains
 ! ------------------------------
-  subroutine PROSPINO(inlo,isq_ng_in,icoll_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in)
+  subroutine PROSPINO(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in)
     
     implicit none
 
     integer,                  intent(in) :: inlo,isq_ng_in,icoll_in,i_error_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in
+    real(kind=double)                    :: energy_in
     character(len=2),         intent(in) :: final_state_in
   
     integer                              :: n0,n1,ns,ii_min,ii_max,ns_min,ns_max
@@ -100,18 +101,11 @@ contains
        ns_max = 0 
     end if
     
-    if (icoll == 0) then                                                                          ! set the collider energy Tevatron/LHC
-       sc = 1960.0**2 
-    else if (icoll == 1) then 
-       sc = 14000.0**2 
-    else if (icoll == 2) then 
-       sc =  7000.0**2 
-    else if (icoll == 3) then 
-       sc =  8000.0**2 
-    else 
+    if ( (icoll < 0).or.(icoll > 1)) then                                                   ! set the collider energy Tevatron/LHC
        print*, " PROSPINO: icoll not set correctly?, continue LHC "
-       sc = 14000.0**2 
+       icoll = 1 
     end if
+    sc = energy_in**2
 
 !----------------------------------------------------------------------------------------
     ifla_le = 1       ! specify the incoming quark flavor for LQ+lepton                 !

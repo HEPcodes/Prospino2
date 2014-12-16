@@ -50,10 +50,10 @@ c              if scale too low, return zero
       end if
 
 c              if scale too high, set to maximum
-      if (mu.gt.1.5D3) then
-         print*, " GET_PDF: problem with too large muF ",mu
-         mu = 1.5D3
-      end if
+ctp      if (mu.gt.1.5D3) then
+ctp         print*, " GET_PDF: problem with too large muF ",mu
+ctp         mu = 1.5D3
+ctp      end if
          
      
       do i1=-5,5,1

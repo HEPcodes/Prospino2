@@ -213,9 +213,14 @@ contains
     massin(2)  = tg
     massin(3)  = s4                                            ! s4 only for ii=3,7,9
     massin(6)  = m1_sign
-    massin(7)  = mg
     massin(9)  = mt
-    massin(11) = ms
+    if (ii==-1) then                                           ! only apply decoupling for ii>-1
+       massin(7)  = mg_orig
+       massin(11) = ms_orig
+    else 
+       massin(7)  = mg
+       massin(11) = ms
+    end if
     massin(12) = qr                                            ! renormalization scale 
     massin(13) = qf                                            ! factorization scale 
     massin(20) = del_s4                                        ! slicing parameter only fort ii=3
@@ -223,7 +228,6 @@ contains
     massin(25) = gams                                          ! width of the squark only for ii=7,9
     massin(26) = 1.0                                           ! to tag 1/s4^2 term only for ii=8,10 
     massin(27) = 0.0                                           ! to tag 1/s3^2 term only for ii=8,10
-
     if (ii==5) then                                            ! define restricted phase space 
        massix(1:30)    = massin(1:30)
        massix(2)       = tgx
@@ -318,8 +322,8 @@ contains
              if (i_ngtest==0) then 
                 mst(-1:1:2) = msq(-is:is:2*is)                                                  ! this is the definiton of is
              else if (i_ngtest==1) then 
-                mst(-1:1:2) = ms
-                msu(-1:1:2) = ms
+                mst(-1:1:2) = ms_orig
+                msu(-1:1:2) = ms_orig
              else 
                 print*, " IFCT_NG_X12: i_ngtest not set "
                 call HARD_STOP

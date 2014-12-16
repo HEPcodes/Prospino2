@@ -740,7 +740,7 @@ contains
 
     integer, intent(in) :: ipart1_in,ipart2_in
     integer             :: i1
-    real(kind=double)   :: mn_min,ml_min,ms_min,ms3_min
+    real(kind=double)   :: mn_min,ml_min,ms3_min
 
     if (abs(ms-mg) < 1.0) then
        ms = ms + 1.0
@@ -752,25 +752,22 @@ contains
        print*, " DECOUPLE_SPECTRUM: spectrum degenerate, change mH ",mch
     end if
 
+    ms_orig = ms                                                            ! keep the original numbers for ii=-1
+    mg_orig = mg
+
     mn_min = min( abs(mass_n(ipart1_in)) ,abs(mass_n(ipart2_in)) )          ! smallest final-state mass for nn channel
     ml_min = min( abs(mass_s(1)), abs(mass_s(2)) )                          ! smallest final-state mass for ll channel
     ms3_min = mass_s(ipart1_in)                                             ! final-state mass for bb and tb channels
 
-    ms_min = 1.e10
-    do i1=-6,6
-       if (i1==0) cycle
-       ms_min = min(msq(i1),ms_min) 
-    end do
-
     if ( (final_state=='gg') .and. ( (ms-mg)/mg > 10) ) then                ! case with virtual-only squarks in Prospino1
        ms = (10+1) * mg 
-       print*, " DECOUPLE_SPECTRUM: squark mass decoupled: ms=",ms
+       print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: ms=",ms
     end if
 
     if ( ((final_state=='ss') .or.                                         &
-          (final_state=='sb')     ).and. ( (mg-ms_min)/ms_min > 10) ) then  ! case with virtual-only gluinos in Prospino1
-       mg = (10+1) * ms_min
-       print*, " DECOUPLE_SPECTRUM: gluino mass decoupled: mg=",mg
+          (final_state=='sb')     ).and. ( (mg-ms)/ms > 10) ) then          ! case with virtual-only gluinos in Prospino1
+       mg = (10+1) * ms
+       print*, " DECOUPLE_SPECTRUM: gluino mass decoupled for NLO part: mg=",mg
     end if
 
     if (final_state=='bb') then                                             ! case with virtual-only gluinos in Prospino2
@@ -778,51 +775,51 @@ contains
 !tp       print*, " ratio ms ",(ms-ms3_min)/ms3_min
        if ( (mg-ms3_min)/ms3_min > 2)  then
           mg = (2+1) * ms3_min
-          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled: mg=",mg
+          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled for NLO part: mg=",mg
        end if
        if ( (ms-ms3_min)/ms3_min > 20)  then
           ms = (20+1) * ms3_min
-          print*, " DECOUPLE_SPECTRUM: squark mass decoupled: mg=",ms
+          print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: mg=",ms
        end if
     end if
 
     if (final_state=='tb') then                                             ! case with virtual-only gluinos in Prospino2
        if ( (mg-ms3_min)/ms3_min > 5) then
           mg = (5+1) * ms3_min
-          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled: mg=",mg
+          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled for NLO part: mg=",mg
        end if
        if ( (ms-ms3_min)/ms3_min > 20) then
           ms = (20+1) * ms3_min
-          print*, " DECOUPLE_SPECTRUM: squark mass decoupled: ms=",ms
+          print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: ms=",ms
        end if
     end if
 
     if (final_state=='nn') then                                             ! case with mixed Born/virtual squarks in Prospino2
        if ( (ms-mn_min)/mn_min > 10) then                                   ! already there for the t channel propagator, using ms for NLO part
           ms = (10+1) * mn_min
-          print*, " DECOUPLE_SPECTRUM: squark mass decoupled: ms=",ms
+          print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: ms=",ms
        end if
        if ( (mg-mn_min)/mn_min > 15) then                                   ! only in the actual loop
           mg = (15+1) * mn_min
-          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled: mg=",mg
+          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled for NLO part: mg=",mg
        end if
     end if
 
     if (final_state=='ll') then                                             ! case with virtual-only squarks in Prospino2
        if ( (ms-ml_min)/ml_min > 15) then                                   ! only in the actual loop
           ms = (15+1) * ml_min
-          print*, " DECOUPLE_SPECTRUM: squark mass decoupled: ms=",ms
+          print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: ms=",ms
        end if
        if ( (mg-ml_min)/ml_min > 15) then                                   ! only in the actual loop
           mg = (15+1) * ml_min
-          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled: mg=",mg
+          print*, " DECOUPLE_SPECTRUM: gluino mass decoupled for NLO part: mg=",mg
        end if
     end if
 
     if (final_state=='ng') then                                             ! case with mixed Born/virtual squarks in Prospino2
        if ( (ms-mg)/mg > 10) then                                   ! already there for the t channel propagator, using ms for NLO part
           ms = (10+1) * mg
-          print*, " DECOUPLE_SPECTRUM: squark mass decoupled: ms=",ms
+          print*, " DECOUPLE_SPECTRUM: squark mass decoupled for NLO part: ms=",ms
        end if
     end if
 
@@ -865,8 +862,8 @@ contains
     integer,           intent(in) :: inlo
     real(kind=double), intent(in) :: scafac
 
-    real(kind=double) :: s_1,energy_1,alphas_1,ms_1,mg_1,mt_1
-    common/CONST1/       s_1,energy_1,alphas_1,ms_1,mg_1,mt_1                       ! energy and masses filled here, s and alphas filled in hadron**.f
+    real(kind=double) :: s_1,energy_1,alphas_1,ms_1,ms_orig_1,mg_1,mg_orig_1,mt_1
+    common/CONST1/       s_1,energy_1,alphas_1,ms_1,ms_orig_1,mg_1,mg_orig_1,mt_1   ! energy and masses filled here, s and alphas filled in hadron**.f
 
     real(kind=double), dimension(-6:6) :: msq_common    
     integer                            :: isquark1_common,isquark2_common,i_ngtest_common
@@ -894,10 +891,12 @@ contains
     integer           :: iflavor, itotal
     common/FLAVOR/       iflavor, itotal
 
-    energy_1 = sqrt( sc )                                                           ! collider energy
-    ms_1     = ms                                                                   ! make sure INIT_SUSY is called first
-    mg_1     = mg
-    mt_1     = mt
+    energy_1  = sqrt( sc )                                                          ! collider energy
+    ms_1      = ms                                                                  ! make sure INIT_SUSY is called first
+    ms_orig_1 = ms_orig                                                             ! make sure INIT_SUSY is called first
+    mg_1      = mg
+    mg_orig_1 = mg_orig
+    mt_1      = mt
 
     energy_2 = sqrt( sc )                                                           ! collider energy
     ms_2     = ms                                                                   ! make sure INIT_SUSY is called first

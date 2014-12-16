@@ -191,9 +191,15 @@ contains
     massin(6)  = m1
     massin(7)  = m2
     massin(9)  = mt
-    massin(10) = mg
-    massin(11) = ms
+    if (ii==-1) then                                           ! only apply decoupling for ii>-1
+       massin(10) = mg_orig
+       massin(11) = ms_orig
+    else
+       massin(10) = mg
+       massin(11) = ms
+    end if
     massin(12) = mu
+    
     if ((ii==4).or.(ii==6)) then                               ! additional entries for mass factorization  
        massin(13) = sx
        massin(14) = t2x 

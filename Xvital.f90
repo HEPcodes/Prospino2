@@ -45,6 +45,7 @@ module xx_pass_integ     ! transfer variable values past vegas
   real(kind=double), dimension(4,4)  :: bw               ! set in INIT_SUSY
   real(kind=double), dimension(1:4)  :: mass_s           ! set in INIT_SUSY
   real(kind=double), dimension(1:4)  :: mass_x           ! set in INIT_SUSY
+  real(kind=double)                  :: mg_orig,ms_orig  ! set in INIT_SUSY
   real(kind=double)                  :: scafac           ! set in PROSPINO 
   real(kind=double)                  :: eta              ! set in INIT_GLOBAL
 

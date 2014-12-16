@@ -310,8 +310,13 @@ contains
     massin(6)  = m1
     massin(7)  = m2
     massin(9)  = mt
-    massin(10) = mg
-    massin(11) = ms
+    if (ii==-1) then                                           ! only apply decoupling for ii>-1
+       massin(10) = mg_orig
+       massin(11) = ms_orig
+    else
+       massin(10) = mg
+       massin(11) = ms
+    end if
     massin(12) = mu
     if ((ii==4).or.(ii==5)) then                               ! additional entries for mass factorization  
        massin(13) = sx
@@ -385,11 +390,11 @@ contains
        call COUPLING_NN(s ,m1,m2,iq,Cs ,Ct ,Cl,Cr,Cv,mx,iout,mkraemer)
        if ((ii==4).or.(ii==5)) call COUPLING_NN(sx,m1,m2,iq,Csx,Ctx,Cl,Cr,Cv,mx,iout,mkraemer)
 
-       if ( (ii>=0) .and. (2.0*ms/(abs(m1)+abs(m2))>20.0) ) then          ! no t channel couplings
-          Cl(1:4) = 0.0                           
-          Cr(1:4) = 0.0 
-          Cv(1:4) = 0.0
-       end if
+!tp       if ( (ii>=0) .and. (2.0*ms/(abs(m1)+abs(m2))>20.0) ) then          ! no t channel couplings
+!tp          Cl(1:4) = 0.0                           
+!tp          Cr(1:4) = 0.0 
+!tp          Cv(1:4) = 0.0
+!tp       end if
 
        if ( (ii>=0) .and. ((2.0*ms/(abs(m1)+abs(m2))>100.0).and.(ms>1.e4)) ) then ! no subtraction of intermediate squarks
           massin(26) = 0.0                        
@@ -485,8 +490,8 @@ contains
              if (i_ngtest==0) then 
                 mst(-1:1:2) = msq(-is:is:2*is)                                                 ! this is the definiton of is
              else if (i_ngtest==1) then 
-                mst(-1:1:2) = ms
-                msu(-1:1:2) = ms
+                mst(-1:1:2) = ms_orig
+                msu(-1:1:2) = ms_orig
              else 
                 print*, " IFCT_NN_X12: i_ngtest not set "
                 call HARD_STOP

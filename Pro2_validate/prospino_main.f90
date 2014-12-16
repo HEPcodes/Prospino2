@@ -4,17 +4,18 @@ program main
   implicit none
 
   integer                              :: inlo,isq_ng_in,icoll_in,i_error_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in
+  real(kind=double)                    :: energy_in
   logical                              :: lfinal
   character(len=2)                     :: final_state_in
 
 !----------------------------------------------------------------------------
-  inlo = 1          ! specify LO only[0] or complete NLO (slower)[1]        !
-!                   ! results: LO     - leading order, degenerate squarks   !
-!                   !          NLO    - NLO, degenerate squarks             !
-!                   !          LO_ms  - leading order, free squark masses   !
-!                   !          NLO_ms - NLO, free squark masses             !
-!                   ! all numerical errors (hopefully) better than 1%       !
-!                   ! follow Vergas iteration on screen to check            !
+  inlo = 1       ! specify LO only[0] or complete NLO (slower)[1]           !
+!                ! results: LO     - LO, degenerate squarks, decoupling on  !
+!                !          NLO    - NLO, degenerate squarks, decoupling on !
+!                !          LO_ms  - LO, free squark masses, decoupling off !
+!                !          NLO_ms - NLO, free squark masses, scaled        !
+!                ! all numerical errors (hopefully) better than 1%          !
+!                ! follow Vegas iteration on screen to check                !
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
@@ -24,7 +25,8 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  icoll_in = 1      ! specify the collider : tevatron[0], lhc14[1], lhc7[2] !
+  icoll_in = 1      ! collider : tevatron[0], lhc[1]                        !
+  energy_in = 14000 ! collider energy in GeV                                !
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
@@ -32,7 +34,7 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  final_state_in = 'tb'                                                     !
+  final_state_in = 'nn'                                                     !
 !                                                                           !
 !                   ng     neutralino/chargino + gluino                     !
 !                   ns     neutralino/chargino + squark                     !
@@ -114,7 +116,7 @@ program main
      call HARD_STOP                                                                      ! finish if final state bad
   end if
 
-  call PROSPINO(inlo,isq_ng_in,icoll_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
+  call PROSPINO(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
         
 !----------------------------------------------------------------------------
 !  input file: prospino.in.leshouches                                       !
