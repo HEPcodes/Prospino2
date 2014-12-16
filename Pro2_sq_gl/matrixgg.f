@@ -129,7 +129,6 @@ C***  VIRTUAL+SOFT CROSS SECTION FOR G + G -> GL + GL
       S1 = 4*MG2 -S
 
       ms2x = ms2
-      if ( (ms.gt.1.D4).and.(ms.gt.10.D0*mg) ) ms2x = ms2x/10.D0 
 
       BETA = SQRT(1.D0 - 4.D0*MG2/S)
       XG = (1.D0 -BETA)*(1.D0+BETA)**(-1)
