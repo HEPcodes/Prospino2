@@ -88,7 +88,7 @@ c --------------------------------------------------------------------
 
 c               wim's form output 
       QBB_tx =   16.D0 * Nc*Cf * t1*tg 
-     &       * ( Cl(1)*Clc(1)/tsl**2 + Cr(1)*Crc(1)/tsl**2 ) 
+     &       * ( Cl(1)*Clc(1)/tsl**2 + Cr(1)*Crc(1)/tsr**2 ) 
 
       QBB_tm = - 16.D0 * Nc*Cf * s*m1*mg 
      &       * ( Clc(1)*Clc(3)/tsl/usl + Crc(1)*Crc(3)/tsr/usr )

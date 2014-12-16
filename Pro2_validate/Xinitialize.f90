@@ -46,7 +46,7 @@ contains
     if ( (final_state_in=='sb').and.(ipart1_in>1)  ) lfinal = .false.
     if ( (final_state_in=='xx').and.(ipart1_in>2)  ) lfinal = .false.
 
-    if ( .not. lfinal ) print*, " PROSPINO_CHECK_FS: final state not valid "
+    if ( .not. lfinal ) print*, " PROSPINO_CHECK_FS: final state not valid ",final_state_in,ipart1_in,ipart2_in
        
   end subroutine PROSPINO_CHECK_FS
 

@@ -153,15 +153,15 @@ contains
           ing_common =  1                                                                       ! for sq-gl only
           ii_min = -1                                                                           ! for new channels only
           if ( (isquark1_in == 0).and.(isquark2_in == 0).and.          &                        ! summing mode for two external squarks
-                (final_state == 'ss')                    ) then
-             isquark1_min = -4                                                                  ! including sbottoms in the final state
+                (final_state == 'ss')                   ) then
+             isquark1_min = -4                                                                  ! no sbottoms in initial state
              isquark1_max =  4
              isquark2_min = -4
              isquark2_max =  4
              ms1_print = ms
              ms2_print = ms
           else if ( (isquark1_in == 0).and.(isquark2_in == 0).and.     &                        ! summing mode for two external squarks
-                (final_state == 'sb')                    ) then
+                (final_state == 'sb')                   ) then
              isquark1_min = -5                                                                  ! including sbottoms in the final state
              isquark1_max =  5
              isquark2_min = -5
@@ -170,22 +170,28 @@ contains
              ms2_print = ms
           else if ( (isquark1_in == 0).and.(isquark2_in == 0).and.     &                        ! one external squark to sum over 
                     ((final_state == 'sg').or.                         &
-                     (final_state == 'ns')                  ) ) then
+                     (final_state == 'ns')            ) ) then
              isquark1_min = -4                                                                  ! no sbottoms in initial state
              isquark1_max =  4
              isquark2_min =  9
              isquark2_max =  9
              ms1_print = ms
           else if ((final_state == 'sb').or.                           &                        ! run individual channels if they exist
-                   (final_state == 'ss').or.                           &
-                   (final_state == 'sg').or.                           &
-                   (final_state == 'ns')                 ) then
+                   (final_state == 'ss')                ) then
              isquark1_min = isquark1_in
              isquark1_max = isquark1_in
              isquark2_min = isquark2_in
              isquark2_max = isquark2_in
              ms1_print = msq(isquark1_min)
              ms2_print = msq(isquark2_min)
+          else if ((final_state == 'sg').or.                           &                        ! run individual channels if they exist
+                   (final_state == 'ns')                 ) then
+             isquark1_min = isquark1_in
+             isquark1_max = isquark1_in
+             isquark2_min =  9
+             isquark2_max =  9
+             ms1_print = msq(isquark1_min)
+             ms2_print = ms
           else                                                                                  ! default, nothing to sum over
              isquark1_min =  9
              isquark1_max =  9
