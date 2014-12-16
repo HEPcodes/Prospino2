@@ -99,13 +99,15 @@ contains
        ns_min = 0
        ns_max = 0 
     end if
-
+    
     if (icoll == 0) then                                                                          ! set the collider energy Tevatron/LHC
        sc = 1960.0**2 
     else if (icoll == 1) then 
        sc = 14000.0**2 
     else if (icoll == 2) then 
        sc =  7000.0**2 
+    else if (icoll == 3) then 
+       sc =  8000.0**2 
     else 
        print*, " PROSPINO: icoll not set correctly?, continue LHC "
        sc = 14000.0**2 
@@ -132,6 +134,7 @@ contains
     do n1   = 0,0,200                                                                           ! can be used to shift MSSM masses
     do n0   = 0,0,150                                                                           ! in routine INIT_SUSY (Xinitialize.f90)
     do ns   = ns_min,ns_max,10                                                                  ! change both scales simultaneously
+
        run0 = n0
        run1 = n1
        scafac = 2.0**(ns/10.0)
@@ -153,15 +156,15 @@ contains
           ing_common =  1                                                                       ! for sq-gl only
           ii_min = -1                                                                           ! for new channels only
           if ( (isquark1_in == 0).and.(isquark2_in == 0).and.          &                        ! summing mode for two external squarks
-                (final_state == 'ss')                   ) then
-             isquark1_min = -4                                                                  ! no sbottoms in initial state
+                (final_state == 'ss')                    ) then
+             isquark1_min = -4                                                                  ! including sbottoms in the final state
              isquark1_max =  4
              isquark2_min = -4
              isquark2_max =  4
              ms1_print = ms
              ms2_print = ms
           else if ( (isquark1_in == 0).and.(isquark2_in == 0).and.     &                        ! summing mode for two external squarks
-                (final_state == 'sb')                   ) then
+                (final_state == 'sb')                    ) then
              isquark1_min = -5                                                                  ! including sbottoms in the final state
              isquark1_max =  5
              isquark2_min = -5
@@ -170,28 +173,22 @@ contains
              ms2_print = ms
           else if ( (isquark1_in == 0).and.(isquark2_in == 0).and.     &                        ! one external squark to sum over 
                     ((final_state == 'sg').or.                         &
-                     (final_state == 'ns')            ) ) then
+                     (final_state == 'ns')                  ) ) then
              isquark1_min = -4                                                                  ! no sbottoms in initial state
              isquark1_max =  4
              isquark2_min =  9
              isquark2_max =  9
              ms1_print = ms
           else if ((final_state == 'sb').or.                           &                        ! run individual channels if they exist
-                   (final_state == 'ss')                ) then
+                   (final_state == 'ss').or.                           &
+                   (final_state == 'sg').or.                           &
+                   (final_state == 'ns')                 ) then
              isquark1_min = isquark1_in
              isquark1_max = isquark1_in
              isquark2_min = isquark2_in
              isquark2_max = isquark2_in
              ms1_print = msq(isquark1_min)
              ms2_print = msq(isquark2_min)
-          else if ((final_state == 'sg').or.                           &                        ! run individual channels if they exist
-                   (final_state == 'ns')                 ) then
-             isquark1_min = isquark1_in
-             isquark1_max = isquark1_in
-             isquark2_min =  9
-             isquark2_max =  9
-             ms1_print = msq(isquark1_min)
-             ms2_print = ms
           else                                                                                  ! default, nothing to sum over
              isquark1_min =  9
              isquark1_max =  9

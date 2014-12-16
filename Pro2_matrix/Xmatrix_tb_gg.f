@@ -52,10 +52,10 @@ ctp  Nf number of SM quarks in the running of alpha_s
      &     + ( 11.D0/3.D0*Nc - 2.D0/3.D0 * (Nf-1.D0) )/2.D0
 
       consof = -alphas/2.D0/Pi * TB_GGB(s,t1,ms1)
-     &         * ( P1 + P2 ) * 2.0*log(sca/ms1) 
+     &         * ( P1 + P2 ) * log(sca/ms1) 
 
       conalp = alphas/2.D0/Pi * TB_GGB(s,t1,ms1)
-     &    * ( 11.D0/3.D0*Nc - 2.D0/3.D0 * (Nf-1.D0)) * 2.0*log(sca/ms1)
+     &    * ( 11.D0/3.D0*Nc - 2.D0/3.D0 * (Nf-1.D0)) * log(sca/ms1)
 
       TB_GG1 = conalp + consof 
 
@@ -81,7 +81,7 @@ c --------------------------------------------------------------------
 
       P1 = 2.D0*Nc*dldel1 
 
-      TB_GG2 = -alphas/Pi*TB_GGB(s,t1,ms1)*P1 * 2.0*log(sca/ms1)
+      TB_GG2 = -alphas/Pi*TB_GGB(s,t1,ms1)*P1 * log(sca/ms1)
 
       end
 
@@ -104,7 +104,7 @@ c --------------------------------------------------------------------
 
       fac = s4 /(s4+ms1**2) /8.D0 /(16*Pi**2)**2 /(Nc**2-1.D0)**2
       
-      COLO1(9) = -2.0*log(sca/ms1)
+      COLO1(9) = -log(sca/ms1)
 
       TB_GG3 = 0.D0
 

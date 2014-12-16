@@ -46,7 +46,7 @@ contains
     if ( (final_state_in=='sb').and.(ipart1_in>1)  ) lfinal = .false.
     if ( (final_state_in=='xx').and.(ipart1_in>2)  ) lfinal = .false.
 
-    if ( .not. lfinal ) print*, " PROSPINO_CHECK_FS: final state not valid ",final_state_in,ipart1_in,ipart2_in
+    if ( .not. lfinal ) print*, " PROSPINO_CHECK_FS: final state not valid "
        
   end subroutine PROSPINO_CHECK_FS
 
@@ -89,7 +89,7 @@ contains
     iscaling = 0  ! calculate cross sections[0] or scaling functions[1]     !
     eta = 1.e-3                                                             !
 !----------------------------------------------------------------------------
-    if (iscaling==1) icoll = 3   ! flag for the luminosities
+    if (iscaling==1) icoll = 4   ! flag for the luminosities
     
 !----------------------------------------------------------------------------
     imx = 0       ! negative masses[0] hard wired                           !
@@ -137,7 +137,7 @@ contains
        idub = 0
     end if
 
-    if (icoll>2) then                     ! may happen for scaling functions 
+    if (icoll>3) then                     ! may happen for scaling functions 
        sc = 1.0
     end if
     
@@ -201,7 +201,7 @@ contains
        lvalid_global = .false.
     end if
 
-    if ( (icoll<0).or.(icoll>2) ) then                                                     ! test icoll 
+    if ( (icoll<0).or.(icoll>3) ) then                                                     ! test icoll 
        print*, " TEST_SETTINGS_GLOBAL: icoll not in range 0...1 ",icoll 
        lvalid_global = .false.
     end if
@@ -580,6 +580,7 @@ contains
     real(kind=double), dimension(2,2)    :: uu_in,vv_in
     real(kind=double), dimension(2,2)    :: mst_in,msb_in,msl_in
     real(kind=double), dimension(4,4)    :: bw_in
+    real(kind=double)                    :: sin2x
     complex(kind=double), dimension(1:4) :: sig
 
     unimass(1:20) = 0.0
@@ -618,7 +619,8 @@ contains
 
 !tp    mg = mg * 1.5**run0                  ! examples for the use of run0 and run1
 !tp    mg = mg + run1
-!tp    mst1 = run1
+!tp    msq(+6) = msq(+6) + run0
+!tp    msq(-6) = msq(-6) + run0
 !tp    print*, " mass shift ",mg
 
     if (imx==1) then                   ! neutralino masses, switch only works for Born term
@@ -667,26 +669,31 @@ contains
        case(6)
           mass_s(1)   = lowmass(33)
           mass_s(2)   = lowmass(33)
-          mass_s(3)   = 2.0*msl(1,1)*msl(2,1)        ! only used for dat3 output 
+          call COMPUTE_SCALAR_ANGLE(msl,sin2x)
+          mass_s(3)   = sin2x
        case(7)
           mass_s(1)   = lowmass(34)
           mass_s(2)   = lowmass(34)
-          mass_s(3)   = 2.0*msl(1,1)*msl(2,1)        ! only used for dat3 output 
+          call COMPUTE_SCALAR_ANGLE(msl,sin2x)
+          mass_s(3)   = sin2x
        case(8)
           mass_s(1)   = lowmass(33)
           mass_s(2)   = lowmass(34)
-          mass_s(3)   = 2.0*msl(1,1)*msl(2,1)        ! only used for dat3 output 
+          call COMPUTE_SCALAR_ANGLE(msl,sin2x)
+          mass_s(3)   = sin2x
        case(9)
           mass_s(1)   = lowmass(35)
           mass_s(2)   = lowmass(35)
        case(10,11)
           mass_s(1)   = lowmass(33)
           mass_s(2)   = lowmass(35)
-          mass_s(3)   = 2.0*msl(1,1)*msl(2,1)        ! only used for dat3 output 
+          call COMPUTE_SCALAR_ANGLE(msl,sin2x)
+          mass_s(3)   = sin2x
        case(12,13)
           mass_s(1)   = lowmass(34)
           mass_s(2)   = lowmass(35)
-          mass_s(3)   = 2.0*msl(1,1)*msl(2,1)        ! only used for dat3 output 
+          call COMPUTE_SCALAR_ANGLE(msl,sin2x)
+          mass_s(3)   = sin2x
        case(14)                                      ! charged Higgs pairs
           mass_s(1)   = lowmass(43)
           mass_s(2)   = lowmass(43)
@@ -694,11 +701,11 @@ contains
     else if ((final_state=='tb').or.(final_state=='xx')) then 
        mass_s(1) = msq(-6)                           ! different from the stau syntax!!!
        mass_s(2) = msq(+6)
-       mass_s(3) = 2.0*mst(1,1)*mst(1,2)               ! like in the Form code
+       mass_s(3) = 2*mst(1,1)*mst(1,2)               ! like in the Form code
        mass_s(4) = mst(1,1)**2 - mst(1,2)**2 
        mass_x(1) = msq(-5)                           ! also fix the sbottom sector  
        mass_x(2) = msq(+5)
-       mass_x(3) = 2.0*msb(1,1)*msb(1,2)               ! like in the Form code
+       mass_x(3) = 2*msb(1,1)*msb(1,2)               ! like in the Form code
        mass_x(4) = msb(1,1)**2 - msb(1,2)**2 
     else if (final_state=='lq') then 
        mass_s(1) = msq(-6)         
@@ -708,11 +715,11 @@ contains
     else if (final_state=='bb') then 
        mass_s(1) = msq(-5)                           ! different from the stau syntax!!!
        mass_s(2) = msq(+5)
-       mass_s(3) = 2.0*msb(1,1)*msb(1,2)               ! like in the Form code
+       mass_s(3) = 2*msb(1,1)*msb(1,2)               ! like in the Form code
        mass_s(4) = msb(1,1)**2 - msb(1,2)**2 
        mass_x(1) = msq(-6)                           ! also fix the stop sector  
        mass_x(2) = msq(+6)
-       mass_x(3) = 2.0*mst(1,1)*mst(1,2)               ! like in the Form code
+       mass_x(3) = 2*mst(1,1)*mst(1,2)               ! like in the Form code
        mass_x(4) = mst(1,1)**2 - mst(1,2)**2 
     end if
 
@@ -898,7 +905,7 @@ contains
     mt_2     = mt
     mst1_2   = msq(-6)
     mst2_2   = msq( 6)
-    sin2t_2  = 2.0*mst(1,1)*mst(1,2)
+    call COMPUTE_SCALAR_ANGLE(mst,sin2t_2)                                          ! compute scalar mixing angle from matrix
 
     i_ngtest_common = i_ngtest                                                      ! on switch (i_ngtest=1) only for testing purpose
     msq_common(-6:6) = msq(-6:6)                                                    ! also needs INIT_SUSY

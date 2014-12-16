@@ -1414,38 +1414,38 @@ c   twisted matrix  (-s  c)                                            c
 c                   ( c  s)   => s2t = ?????                           c
 c                                                                      c
 c   angle defined for example in st-st-Z coupling:                     c
-c   st1-st2-Z from stL-stL-Z defines sin2theta in couplings            c
+c   project out st1 in process means r11*r12 in expressions            c
 c                                                                      c
-c   means: sin2theta = 2*r11*r12 for st1-st2 mixed term                c
+c   means: sin2theta = 2*r11*r12 for st1                               c
 c                                                                      c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-ctp      subroutine COMPUTE_SCALAR_ANGLE(matrix,sin2theta)
-ctp      
-ctp      implicit none
-ctp
-ctp      real*8 matrix(2,2), sin2theta
-ctp      real*8 det, trace, offdiag
-ctp
-ctp      det     = matrix(1,1)*matrix(2,2) - matrix(1,2)*matrix(2,1)
-ctp      trace   = matrix(1,1) + matrix(2,2)
-ctp      offdiag = matrix(1,2) + matrix(2,1)
-ctp
-ctp      if ( abs( abs(det)-1.D0 ) > 1.d-8 ) then
-ctp         print*, " COMPUTE_SCALAR_ANGLE: determinant wrong ",det
-ctp         call HARD_STOP
-ctp      end if
-ctp
-ctp      if ( abs( offdiag ) < 1.d-8 ) then
+      subroutine COMPUTE_SCALAR_ANGLE(matrix,sin2theta)
+      
+      implicit none
+
+      real*8 matrix(2,2), sin2theta
+      real*8 det, trace, offdiag
+
+      det     = matrix(1,1)*matrix(2,2) - matrix(1,2)*matrix(2,1)
+      trace   = matrix(1,1) + matrix(2,2)
+      offdiag = matrix(1,2) + matrix(2,1)
+
+      if ( abs( abs(det)-1.D0 ) > 1.d-8 ) then
+         print*, " COMPUTE_SCALAR_ANGLE: determinant wrong ",det
+         call HARD_STOP
+      end if
+
+      if ( abs( offdiag ) < 1.d-8 ) then
 ctp         print*, " COMPUTE_SCALAR_ANGLE: rotation "
-ctp         sin2theta = 2.d0 * matrix(1,1)*matrix(1,2)
-ctp      else if ( abs( trace ) < 1.d-8 ) then
+         sin2theta = 2.d0 * matrix(1,1)*matrix(1,2)
+      else if ( abs( trace ) < 1.d-8 ) then
 ctp         print*, " COMPUTE_SCALAR_ANGLE: twisted "
-ctp         sin2theta = 2.d0 * matrix(1,1)*matrix(1,2)
-ctp      else
-ctp         print*, " COMPUTE_SCALAR_ANGLE: matrix weird "
-ctp         call HARD_STOP
-ctp      end if
-ctp
-ctp      end
+         sin2theta = 2.d0 * matrix(1,1)*matrix(1,2)
+      else
+         print*, " COMPUTE_SCALAR_ANGLE: matrix weird "
+         call HARD_STOP
+      end if
+
+      end
 
 

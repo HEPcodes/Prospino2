@@ -19,10 +19,16 @@ contains
          form2="(a2,1x,2(i2,1x),1x,5(f6.1,1x),1(f6.3,1x),4(g9.3,1x),(f6.4,1x),1(g9.3,1x))"
 
     integer           :: i_zero
-    real(kind=double) :: r_zero
+    real(kind=double) :: r_zero, sin2t
 
     i_zero = 0
     r_zero = 0.0
+
+    if (final_state=='tb') then
+       call COMPUTE_SCALAR_ANGLE(mst,sin2t)                                         ! compute scalar mixing angle from matrix
+    else if (final_state=='bb') then
+       call COMPUTE_SCALAR_ANGLE(msb,sin2t)
+    end if
 
     select case(final_state)
     case ('ng')
@@ -337,15 +343,6 @@ contains
     write(ndat3, fmt="(a12)"           )  " ---------- "
     write(ndat3, fmt="(a12,2(f9.6,2x))")  " V        = ",vv(1,1:2)
     write(ndat3, fmt="(a12,2(f9.6,2x))")  "            ",vv(2,1:2)
-    write(ndat3, fmt="(a12)"           )  " ---------- "
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  " F (st)   = ",mst(1,1:2)
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  "            ",mst(2,1:2)
-    write(ndat3, fmt="(a12)"           )  " ---------- "
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  " F (sb)   = ",msb(1,1:2)
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  "            ",msb(2,1:2)
-    write(ndat3, fmt="(a12)"           )  " ---------- "
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  " F (sl)   = ",msl(1,1:2)
-    write(ndat3, fmt="(a12,2(f9.6,2x))")  "            ",msl(2,1:2)
     write(ndat3, fmt="(a12)"           )  " ---------- "
     write(ndat3, fmt="(a18)"           )  " flags : "
     write(ndat3, fmt="(a12,i2)"        )  " isq_ng   = ",isq_ng

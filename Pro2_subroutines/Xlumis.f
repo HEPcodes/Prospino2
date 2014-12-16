@@ -8,7 +8,8 @@ c                                                                      c
 c  icoll = 0 : tevatron (p,pbar collider)                              c
 c          1 : lhc 14 tev (p,p collider)                               c
 c          2 : lhc  7 tev (p,p collider)                               c
-c          3 : LUMI=1.0, only scaling function!!!                      c
+c          3 : lhc  8 tev (p,p collider)                               c
+c          4 : LUMI=1.0, only scaling function!!!                      c
 c                                                                      c
 c  idub = 0 ; iq = +1  (u,ubar) or (u,g) or (g,ubar) + perm.           c
 c             iq = -1  (d,dbar) or (d,g) or (g,dbar) + perm.           c
@@ -71,7 +72,7 @@ c               n = dummy variable in this case
       real*8  u2b,d2b,s2b,c2b,b2b
 
 c               for scaling functions only
-      if (icoll.eq.3) then
+      if (icoll.eq.4) then
          LUMI = 1.D0
          return 
       end if 
@@ -108,7 +109,7 @@ c               assign internal structure for Tevatron (p-pbar)
          g2x = pdf2( 0)
 
 c               the same for the LHC
-      else if ( (icoll.eq.1).or.(icoll.eq.2) ) then 
+      else if ( (icoll.eq.1).or.(icoll.eq.2).or.(icoll.eq.3) ) then 
          u1q = pdf1( 1)
          u1b = pdf1(-1)
          d1q = pdf1( 2)
