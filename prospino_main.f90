@@ -24,7 +24,7 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  icoll_in = 1      ! specify the collider : tevatron[0], lhc14[1], lhc7[2] !
+  icoll_in = 2      ! specify the collider : tevatron[0], lhc14[1], lhc7[2] !
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  final_state_in = 'nn'                                                     !
+  final_state_in = 'sg'                                                     !
 !                                                                           !
 !                   ng     neutralino/chargino + gluino                     !
 !                   ns     neutralino/chargino + squark                     !
@@ -53,8 +53,8 @@ program main
 !----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
-  ipart1_in = 2                                                             !
-  ipart2_in = 5                                                             !
+  ipart1_in = 1                                                             !
+  ipart2_in = 1                                                             !
 !                                                                           !
 !  final_state_in = ng,ns,nn                                                !
 !  ipart1_in   = 1,2,3,4  neutralinos                                       !
@@ -97,6 +97,8 @@ program main
 !                    (bL cL sL dL uL uR dR sR cR bR) in CteQ ordering       !
 !  isquark1_in     = 0 sum over light-flavor squarks throughout             !
 !                      (the squark mass in the data files is then averaged) !
+!                                                                           !
+!  if there are two squarks, either fix both or none                        !
 !                                                                           !
 !  flavors in initial state: only light-flavor partons, no bottoms          !
 !                            bottom partons only for Higgs channels         !
